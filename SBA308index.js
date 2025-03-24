@@ -36,7 +36,8 @@ const CourseInfo = {
     course_id: 451,
     group_weight: 25,
     assignments: [
-      {
+  
+  {
         id: 1,
         name: "Declare a Variable",
         due_at: "2023-01-25",
@@ -52,10 +53,16 @@ const CourseInfo = {
         id: 3,
         name: "Code the World",
         due_at: "3156-11-15",
-        points_possible: 500
+        points_possible: 500,
       }
     ]
-  };
+}
+const AssignmentInfo = {
+    id: 12345,
+    name: "Fundamentals of JavaScript",
+    due_at: "2025-03-17",
+    points_possible: 500,
+}
   
   // The provided learner submission data.
   const LearnerSubmissions = [
@@ -101,7 +108,7 @@ const CourseInfo = {
     }
   ];
   
-  function getLearnerData(course, ag, submissions) {
+  function getLearnerData(course, avg, submissions) {
     // here, we would process this data to achieve the desired result.
     const result = [
       {
@@ -121,7 +128,7 @@ const CourseInfo = {
     return result;
   }
   
-  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions,);
   
   console.log(result);
 
