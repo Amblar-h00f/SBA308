@@ -57,12 +57,20 @@ const CourseInfo = {
       }
     ]
 }
-const AssignmentInfo = {
-    id: 12345,
+const AssignmentInfo = [
+    {
+    id: 125,
     name: "Fundamentals of JavaScript",
     due_at: "2025-03-17",
     points_possible: 500,
-}
+    },
+    {
+    id: 132,
+    name: "Fundamentals of JavaScript",
+    due_at: "2025-03-17",
+    points_possible: 500,
+    }
+]
   
   // The provided learner submission data.
   const LearnerSubmissions = [
@@ -128,7 +136,7 @@ const AssignmentInfo = {
     return result;
   }
   
-  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions,);
+  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions,AssignmentInfo,);
   
   console.log(result);
 
