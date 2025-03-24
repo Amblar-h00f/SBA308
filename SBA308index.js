@@ -135,8 +135,111 @@ const AssignmentInfo = [
   
     return result;
   }
+  {
+  const _result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions,AssignmentInfo,);
   
-  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions,AssignmentInfo,);
-  
-  console.log(result);
+  console.log(_result);
 
+
+  function getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions) {
+    // Validate course-assignment group relationship
+    if (AssignmentGroup.course_id !== CourseInfo.id) {
+        throw new Error("Invalid input: Assignment group doesn't belong to this course");
+    }
+
+    // Create learner data structure
+    const learners = new Map();
+
+    // Helper function to process each submission
+    function processSubmission(submission) {
+        try {
+            const assignment = AssignmentGroup.assignments.find(a => a.id === submission.assignment_id);
+            if (!assignment) {
+                console.warn(`Skipping unknown assignment ${submission.assignment_id}`);
+                return;
+            }
+
+            // Date validation
+            const dueDate = new Date(assignment.due_at);
+            const currentDate = new Date();
+            if (dueDate > currentDate) return; // Skip non-due assignments
+
+            // Numeric validation
+            const pointsPossible = Number(assignment.points_possible);
+            if (isNaN(pointsPossible) || pointsPossible <= 0) {
+                throw new Error(`Invalid points possible: ${assignment.points_possible}`);
+            }
+
+            const rawScore = Number(submission.submission.score);
+            if (isNaN(rawScore)) {
+                throw new Error(`Invalid score format: ${submission.submission.score}`);
+            }
+
+            // Late penalty calculation
+            const submittedDate = new Date(submission.submission.submitted_at);
+            let adjustedScore = rawScore;
+            if (submittedDate > dueDate) {
+                const penalty = pointsPossible * 0.1;
+                adjustedScore = Math.max(adjustedScore - penalty, 0);
+            }
+
+            // Calculate percentage score
+            const percentage = (adjustedScore / pointsPossible) * 100;
+
+            // Update learner record
+            const learnerId = submission.learner_id;
+            if (!learners.has(learnerId)) {
+                learners.set(learnerId, {
+                    totalScore: 0,
+                    totalPossible: 0,
+                    scores: {}
+                });
+            }
+
+            const learner = learners.get(learnerId);
+            learner.totalScore += adjustedScore;
+            learner.totalPossible += pointsPossible;
+            learner.scores[submission.assignment_id] = Number(percentage.toFixed(2));
+            
+        } catch (error) {
+            console.error(`Error processing submission (Learner ${submission.learner_id}):`, error.message);
+        }
+    }
+
+    // Process all submissions
+    LearnerSubmissions.forEach(processSubmission);
+
+    // Generate final output
+    return Array.from(learners.entries()).map(([id, data]) => ({
+        id,
+        avg: data.totalPossible > 0 
+            ? Number(((data.totalScore / data.totalPossible) * 100).toFixed(2))
+            : 0,
+        ...data.scores
+    }));
+}
+
+// Example usage with your data
+function getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions) {
+const result =[
+[
+    {
+        id: 125,
+        avg: 98.5,
+        1: 94.00,
+        2: 100.00
+    },
+    {
+        id: 132,
+        avg: 82.00,
+        1: 78.00,
+        2: 83.33
+    }
+],
+
+/*{
+const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+console.log(result);
+}
+// code prints out duplicate identical arrays
+  
