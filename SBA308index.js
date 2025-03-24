@@ -193,6 +193,8 @@ const AssignmentInfo = [
                     totalScore: 0,
                     totalPossible: 0,
                     scores: {}
+
+                   ,break;
                 });
             }
 
