@@ -23,7 +23,7 @@ Include a README file that contains a description of your application.*/
 
 
 
-// The provided course information.
+/*// The provided course information.
 const CourseInfo = {
     id: 451,
     name: "Introduction to JavaScript"
@@ -134,9 +134,9 @@ const AssignmentInfo = [
     ];
   
     return result;
-  }
-  {
-  const _result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions,AssignmentInfo,);
+  }*/
+  /*
+  const _result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions,);
   
   console.log(_result);
 
@@ -194,7 +194,7 @@ const AssignmentInfo = [
                     totalPossible: 0,
                     scores: {}
 
-                   ,break;
+                   
                 });
             }
 
@@ -243,5 +243,88 @@ const result =[
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 console.log(result);
 }
-// code prints out duplicate identical arrays
-  
+// code prints out duplicate identical arrays*/
+
+const CourseInfo = {};
+
+const AssignmentGroup = {};
+
+const LearnerSubmissions = [];
+
+function getLearnerData(course, assignmentGroup, submissions) {
+
+}   try{
+    if (assignmentGroup.course_id !== course.id) 
+      throw new Error("Invalid course-group relationship");
+    
+    const learnerMap = new Map();
+    let processedCount = 0;
+
+    for(const submission of submissions) {
+      if (!submission.learner_id) continue; //skip invalid entries
+      const assignment = assignmentGroup.assignmets.find(a => a.id === submission.assignment_id);
+
+      if (!assignment) {
+        console.warn('Skipping invalid assignment ${submission.assignment_id}');
+        continue;
+      }
+const dueDate = new Date(assignment.due_at);
+const currentDate = new Date();
+const submissionDate = new 
+Date(submission.submission.submitted_at);
+
+const isLate = submissionDate > dueDate;
+const isValidDate = dueDate < currentDate;
+
+let score = submission.submission.score;
+let maxPoints = assignment.points_possible;
+
+if (typeof score !== 'number' || typeof maxPoints !== 'number')
+{ 
+  if (isLate && isValidDate) {
+score = Math.max(score - (maxPoints * 0.1), 0);
+}
+
+const learnerId = submission.learner_id;
+if (!learnerMap.has(learnerId)) {
+  learnerMap.set(learnerId, {
+    total:0,
+    possible: 0,
+    scores: {}
+  });
+}
+const learner = learnerMap.get(learnerId);
+learner.total += score;
+learner.possible += maxPoints;
+learner.scores[assignment.id] = (score / maxPoints). toFixed(2);
+
+processedCount++; 
+
+}
+const result =[];
+Array.from(learnerMap.entries()).forEach(([id, data]) => {
+const avg = data.possible > 0 ?
+(data.total / data.possible).toFixed(3) : 0;
+
+result.push({
+  id,
+  avg: Number(avg), data,scores
+});
+});
+return result; 
+    } try {
+const results = getLearnerData(CourseInfo,
+  AssignmentGroup, LearnerSubmissions);
+  console.log(results);
+} catch (error) {
+  console.error("Fatal error:", error);
+}
+
+
+
+    
+      
+    /*   
+     (error) 
+      console.error("Processing failed:", error.message);
+      return []*/
